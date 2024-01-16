@@ -13,6 +13,10 @@ from services.message_groups import *
 from services.messages import *
 from services.create_message import *
 from services.show_activity import *
+#X-RAY-----
+from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
+
 
 #honeycomb
 from opentelemetry import trace
@@ -29,6 +33,11 @@ from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProces
 provider = TracerProvider()
 processor = BatchSpanProcessor(OTLPSpanExporter())
 provider.add_span_processor(processor)
+
+#X-RAY-----
+xray_url = os.getenv("AWS_XRAY_URL")
+xray_recorder.configure(service='Cruddur', dynamic_naming=xray_url)
+XRayMiddleware(app, xray_recorder)
 
 #show this in the logs within the backen-flask app (STDOUT)
 simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
