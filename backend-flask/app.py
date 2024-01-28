@@ -107,7 +107,7 @@ def data_create_message():
   return
 @app.route("/api/activities/home", methods=['GET'])
 def data_home():
-  data = HomeActivities.run()
+  data = HomeActivities.run(logger=LOGGER)
   return data, 200
 @app.route("/api/activities/@<string:handle>", methods=['GET'])
 def data_handle(handle):
